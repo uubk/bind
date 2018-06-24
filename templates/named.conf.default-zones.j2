@@ -1,0 +1,49 @@
+// be authoritative for the localhost forward and reverse zones, and for
+// broadcast zones as per RFC 1912
+view "internal" {
+	match-clients { internal; };
+	recursion yes;
+
+	// prime the server with knowledge of the root servers
+	zone "." {
+		type hint;
+		file "/etc/bind/db.root";
+	};
+
+	zone "localhost" {
+		type master;
+		file "/etc/bind/db.local";
+	};
+
+	zone "127.in-addr.arpa" {
+		type master;
+		file "/etc/bind/db.127";
+	};
+
+	zone "0.in-addr.arpa" {
+		type master;
+		file "/etc/bind/db.0";
+	};
+
+	zone "255.in-addr.arpa" {
+		type master;
+		file "/etc/bind/db.255";
+	};
+};
+
+view "external" {
+	match-clients { any; };
+	recursion no;
+
+	dynamic-db "{{ bind_dns_ldap_zoneid }}" {
+		library "ldap.so";
+		arg "uri {{ bind_ldap_url }}";
+		arg "base {{ bind_ldap_base }}";
+		arg "auth_method sasl";
+		arg "krb5_principal dns/{{ ansible_fqdn }}@{{ bind_ldap_krb_realm }}";
+		arg "sasl_mech GSSAPI";
+		arg "krb5_keytab FILE:/etc/bind/ldap.keytab";
+		arg "connections 3";
+		arg "fake_mname {{ ansible_fqdn }}.";
+	};
+};

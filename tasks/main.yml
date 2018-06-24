@@ -1,0 +1,85 @@
+---
+  - name: Install software
+    become: True
+    apt: name="{{ item }}" state=present update_cache=yes cache_valid_time=1800
+    with_items:
+      - bind9-dyndb-ldap
+      - bind9
+
+  - name: Handle Kerberos and LDAP
+    include_tasks: ldap.yml
+
+  - name: Configure bind
+    become: True
+    template:
+      src: "{{ item }}.j2"
+      dest: "/etc/bind/{{ item }}"
+      owner: root
+      group: bind
+      mode: 0644
+    with_items:
+      - named.conf.default-zones
+      - named.conf.local
+      - named.conf.options
+    notify: restart bind
+
+  - name: Create bind LDAP base
+    run_once: true
+    ldap_entry:
+      dn: "{{ bind_ldap_base }}"
+      server_uri: "{{ bind_ldap_ansible_url }}"
+      bind_dn: "cn=admin,{{ auth_ldap_domain_ldap }}"
+      bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
+      objectClass:
+        - top
+        - nsContainer
+      attributes:
+        cn: dns
+
+  - name: Create dummy config
+    run_once: true
+    ldap_entry:
+      dn: "{{ bind_ldap_base }}"
+      server_uri: "{{ bind_ldap_ansible_url }}"
+      bind_dn: "cn=admin,{{ auth_ldap_domain_ldap }}"
+      bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
+      objectClass:
+        - top
+        - idnsConfigObject
+
+  - name: Upload DNSSEC Keys
+    become: True
+    copy:
+      src: keys/enc/{{ item.name }}
+      dest: "/var/cache/bind/dyndb-ldap/{{ bind_dns_ldap_zoneid }}/master/{{ item.zone }}/keys/{{ item.name }}"
+      owner: bind
+      group: bind
+      mode: 0640
+    with_items: "{{ bind_dnssec_keys }}"
+
+  - name: Create zones
+    run_once: true
+    ldap_entry:
+      dn: "idnsName={{ item.name }},{{ bind_ldap_base }}"
+      server_uri: "{{ bind_ldap_ansible_url }}"
+      bind_dn: "cn=admin,{{ auth_ldap_domain_ldap }}"
+      bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
+      objectClass:
+        - top
+        - idnsZone
+        - idnsRecord
+      attributes: "{{ item.attributes }}"
+    with_items: "{{ bind_dns_zones }}"
+
+  - name: Create static entries
+    run_once: true
+    ldap_entry:
+      dn: "idnsName={{ item.name }},idnsName={{ item.zone }},{{ bind_ldap_base }}"
+      server_uri: "{{ bind_ldap_ansible_url }}"
+      bind_dn: "cn=admin,{{ auth_ldap_domain_ldap }}"
+      bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
+      objectClass:
+        - top
+        - idnsRecord
+      attributes: "{{ item.attributes }}"
+    with_items: "{{ bind_dns_entries }}"
