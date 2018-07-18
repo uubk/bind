@@ -2,3 +2,7 @@
   - name: restart bind
     become: True
     service: name=bind9 state=restarted enabled=yes
+
+  - name: restart manual-notify
+    become: True
+    service: name=manual-notify state=restarted enabled=yes

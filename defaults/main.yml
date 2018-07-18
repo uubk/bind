@@ -8,5 +8,7 @@ bind_dns_ldap_zoneid: "EXAMPLE"
 bind_dns_zones: []
 bind_dns_entries: []
 bind_dnssec_keys: []
+bind_notify_manual: False
+bind_notify_manual_config: []
 
 bind_group: "somegroup"

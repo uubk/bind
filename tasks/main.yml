@@ -6,6 +6,12 @@
       - bind9-dyndb-ldap
       - bind9
 
+  - name: Install software (manual notify)
+    become: True
+    apt: name="{{ item }}" state=present update_cache=yes cache_valid_time=1800
+    with_items:
+      - manual-notify
+
   - name: Handle Kerberos and LDAP
     include_tasks: ldap.yml
 
@@ -83,3 +89,22 @@
         - idnsRecord
       attributes: "{{ item.attributes }}"
     with_items: "{{ bind_dns_entries }}"
+
+  - name: Ensure that manual notify service config directory exists
+    become: True
+    file:
+      path: /etc/manualNotify
+      state: directory
+      owner: root
+      group: root
+      mode: 0755
+
+  - name: Configre manual notify service
+    become: True
+    copy:
+      dest: /etc/manualNotify/config.yml
+      owner: root
+      group: root
+      mode: 0640
+      content: "{{ bind_notify_manual_config|to_nice_yaml }}"
+    notify: restart manual-notify
