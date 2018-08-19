@@ -54,6 +54,13 @@
         - top
         - idnsConfigObject
 
+  - name: Ensure DNSSEC key directories exist
+    become: True
+    shell: mkdir -p "/var/cache/bind/dyndb-ldap/{{ bind_dns_ldap_zoneid }}/master/{{ item.zone }}/keys" && chown -R bind:bind /var/cache/bind/dyndb-ldap
+    with_items: "{{ bind_dnssec_keys }}"
+    changed_when: False
+    failed_when: False
+
   - name: Upload DNSSEC Keys
     become: True
     copy:
@@ -111,3 +118,5 @@
       mode: 0640
       content: "{{ bind_notify_manual_config|to_nice_yaml }}"
     notify: restart manual-notify
+
+  - meta: flush_handlers

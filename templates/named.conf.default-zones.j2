@@ -40,7 +40,7 @@ view "external" {
 		arg "uri {{ bind_ldap_url }}";
 		arg "base {{ bind_ldap_base }}";
 		arg "auth_method sasl";
-		arg "krb5_principal dns/{{ ansible_fqdn }}@{{ bind_ldap_krb_realm }}";
+		arg "krb5_principal DNS/{{ ansible_fqdn }}@{{ bind_ldap_krb_realm }}";
 		arg "sasl_mech GSSAPI";
 		arg "krb5_keytab FILE:/etc/bind/ldap.keytab";
 		arg "connections 3";

@@ -34,7 +34,7 @@
   - name: Create principals for bind
     become: True
     run_once: True
-    command: kadmin.local addprinc -randkey "dns/{{ hostvars[item]['ansible_fqdn'] }}@{{ bind_ldap_krb_realm }}"
+    command: kadmin.local addprinc -randkey "DNS/{{ hostvars[item]['ansible_fqdn'] }}@{{ bind_ldap_krb_realm }}"
     failed_when: False
     changed_when: False
     with_items: "{{ groups[bind_group] }}"
@@ -42,7 +42,7 @@
   - name: Create keytabs for bind
     become: True
     when: item == inventory_hostname
-    command: kadmin.local ktadd -k /etc/bind/ldap.keytab "dns/{{ hostvars[item]['ansible_fqdn'] }}@{{ bind_ldap_krb_realm }}"
+    command: kadmin.local ktadd -k /etc/bind/ldap.keytab "DNS/{{ hostvars[item]['ansible_fqdn'] }}@{{ bind_ldap_krb_realm }}"
     args:
       creates: /etc/bind/ldap.keytab
     with_items: "{{ groups[bind_group] }}"
