@@ -1,35 +1,35 @@
 ---
   # Schema is in GIT due to https://bugzilla.redhat.com/show_bug.cgi?id=1413805
-  - name: Check whether bind LDAP schema has been imported
-    shell: |
-      /usr/bin/ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=schema,cn=config | grep "dn: cn" | grep dns
-    register: bindcheck
-    failed_when: False
-    changed_when: False
-
-  - name: Create ansible schema dir
-    become: True
-    file:
-      path: /etc/ldap/ansible
-      owner: root
-      group: root
-      mode: 0640
-      state: directory
-
-  - name: Upload DNS schema
-    become: True
-    copy:
-      src: dns.ldif
-      dest: /etc/ldap/ansible/dns.ldif
-      owner: root
-      group: root
-      mode: 0640
-
-  - name: Import Kerberos schema
-    run_once: True
-    when: bindcheck.rc == 1
-    become: True
-    shell: /usr/bin/ldapadd -Y EXTERNAL -H ldapi:/// < /etc/ldap/ansible/dns.ldif
+  #  - name: Check whether bind LDAP schema has been imported
+  #    shell: |
+  #      /usr/bin/ldapsearch -Y EXTERNAL -H ldapi:/// -b cn=schema,cn=config | grep "dn: cn" | grep dns
+  #    register: bindcheck
+  #    failed_when: False
+  #    changed_when: False
+  #
+  #  - name: Create ansible schema dir
+  #    become: True
+  #    file:
+  #      path: /etc/ldap/ansible
+  #      owner: root
+  #      group: root
+  #      mode: 0640
+  #      state: directory
+  #
+  #  - name: Upload DNS schema
+  #    become: True
+  #    copy:
+  #      src: dns.ldif
+  #      dest: /etc/ldap/ansible/dns.ldif
+  #      owner: root
+  #      group: root
+  #      mode: 0640
+  #
+  #  - name: Import Kerberos schema
+  #    run_once: True
+  #    when: bindcheck.rc == 1
+  #    become: True
+  #    shell: /usr/bin/ldapadd -Y EXTERNAL -H ldapi:/// < /etc/ldap/ansible/dns.ldif
 
   - name: Create principals for bind
     become: True

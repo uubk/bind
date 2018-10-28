@@ -13,8 +13,8 @@
     with_items:
       - manual-notify
 
-  - name: Handle Kerberos and LDAP
-    include_tasks: ldap.yml
+      #  - name: Handle Kerberos and LDAP
+      #    include_tasks: ldap.yml
 
   - name: Configure bind
     become: True
@@ -35,7 +35,7 @@
     ldap_entry:
       dn: "{{ bind_ldap_base }}"
       server_uri: "{{ bind_ldap_ansible_url }}"
-      bind_dn: "cn=admin,{{ auth_ldap_domain_ldap }}"
+      bind_dn: "cn=Directory Manager"
       bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
       objectClass:
         - top
@@ -48,7 +48,7 @@
     ldap_entry:
       dn: "{{ bind_ldap_base }}"
       server_uri: "{{ bind_ldap_ansible_url }}"
-      bind_dn: "cn=admin,{{ auth_ldap_domain_ldap }}"
+      bind_dn: "cn=Directory Manager"
       bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
       objectClass:
         - top
@@ -76,7 +76,7 @@
     ldap_entry:
       dn: "idnsName={{ item.name }},{{ bind_ldap_base }}"
       server_uri: "{{ bind_ldap_ansible_url }}"
-      bind_dn: "cn=admin,{{ auth_ldap_domain_ldap }}"
+      bind_dn: "cn=Directory Manager"
       bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
       objectClass:
         - top
@@ -90,7 +90,7 @@
     ldap_entry:
       dn: "idnsName={{ item.name }},idnsName={{ item.zone }},{{ bind_ldap_base }}"
       server_uri: "{{ bind_ldap_ansible_url }}"
-      bind_dn: "cn=admin,{{ auth_ldap_domain_ldap }}"
+      bind_dn: "cn=Directory Manager"
       bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
       objectClass:
         - top
