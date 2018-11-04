@@ -36,7 +36,7 @@
       dn: "{{ bind_ldap_base }}"
       server_uri: "{{ bind_ldap_ansible_url }}"
       bind_dn: "cn=Directory Manager"
-      bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
+      bind_pw: "{{ auth_ldap_admin_pwd }}"
       objectClass:
         - top
         - nsContainer
@@ -49,7 +49,7 @@
       dn: "{{ bind_ldap_base }}"
       server_uri: "{{ bind_ldap_ansible_url }}"
       bind_dn: "cn=Directory Manager"
-      bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
+      bind_pw: "{{ auth_ldap_admin_pwd }}"
       objectClass:
         - top
         - idnsConfigObject
@@ -77,7 +77,7 @@
       dn: "idnsName={{ item.name }},{{ bind_ldap_base }}"
       server_uri: "{{ bind_ldap_ansible_url }}"
       bind_dn: "cn=Directory Manager"
-      bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
+      bind_pw: "{{ auth_ldap_admin_pwd }}"
       objectClass:
         - top
         - idnsZone
@@ -91,7 +91,7 @@
       dn: "idnsName={{ item.name }},idnsName={{ item.zone }},{{ bind_ldap_base }}"
       server_uri: "{{ bind_ldap_ansible_url }}"
       bind_dn: "cn=Directory Manager"
-      bind_pw: "{{ auth_ldap_admin_pwd_clear }}"
+      bind_pw: "{{ auth_ldap_admin_pwd }}"
       objectClass:
         - top
         - idnsRecord
