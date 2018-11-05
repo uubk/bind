@@ -1,0 +1,14 @@
+# Standards: 0.1
+galaxy_info:
+  author: Maximilian Falkenstein
+  description: Deploy bind with LDAP backend
+  license: Apache
+  min_ansible_version: 3.6
+  platforms:
+    - name: Debian
+      versions:
+        - stretch
+  galaxy_tags:
+    - system
+    - bind
+    - dns
