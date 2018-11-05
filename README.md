@@ -1,8 +1,10 @@
 # Bind
+[![CircleCI status](https://img.shields.io/circleci/project/github/uubk/bind/master.svg?style=shield)](https://circleci.com/gh/uubk/bind/tree/master)
+![License](https://img.shields.io/github/license/uubk/bind.svg?style=popout)
 Setup Bind9 as authoritative server with zones stored in LDAP. Tested on Debian 9.
 
 ## Note
-The role assumes that you install this on hosts where `kadmin.local` works. It will also try to automatically import the LDAP schema.
+The role assumes that you used e.g. [auth-server](https://github.com/uubk/auth-server) to pre-provision Kerberos principals, keytabs and the LDAP schema.
 
 ## Description
 This role sets up Bind 9 as DNSSEC-validation resolver for loopback queries and as authoritative nameserver for everyone else. The data is stored in LDAP so that you can have multiple 'primary nameservers'.
@@ -68,4 +70,4 @@ dnssec-keygen -a RSASHA512 -b 2048 -f KSK example.org
 For details on DNSSEC key rollover strategies, have a look at the official [BIND DNSSEC Guide](https://ftp.isc.org/isc/dnssec-guide/html/dnssec-guide.html#signing-maintenance-tasks). For details on the possible LDAP attributes, have a look at `files/dns.ldif` and at [the official documentation](https://github.com/freeipa/bind-dyndb-ldap). Note that most record types are actually defined in the COSINE schema.
 
 ## License
-Apache 2.0, except for `files/dns.ldif`, which is GPL2 and has been modified from the [upstream repo](https://github.com/freeipa/bind-dyndb-ldap/blob/master/doc/schema.ldif).
+Apache 2.0
