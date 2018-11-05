@@ -12,6 +12,7 @@
   - name: Install software (manual notify)
     when: bind_notify_manual
     become: True
+    apt:
       state: present
       update_cache: yes
       cache_valid_time: 1800
