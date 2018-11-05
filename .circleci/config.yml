@@ -1,0 +1,9 @@
+version: 2.0
+jobs:
+  build:
+    docker:
+      - image: uubk/ansible-standards:latest
+    steps:
+      - checkout
+      - run: ansible-lint .
+      - run: git ls-files | xargs ansible-review
