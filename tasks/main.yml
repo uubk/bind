@@ -1,20 +1,22 @@
 ---
   - name: Install software
     become: True
-    apt: name="{{ item }}" state=present update_cache=yes cache_valid_time=1800
-    with_items:
-      - bind9-dyndb-ldap
-      - bind9
+    apt:
+      state: present
+      update_cache: yes
+      cache_valid_time: 1800
+      name:
+        - bind9-dyndb-ldap
+        - bind9
 
   - name: Install software (manual notify)
     when: bind_notify_manual
     become: True
-    apt: name="{{ item }}" state=present update_cache=yes cache_valid_time=1800
-    with_items:
-      - manual-notify
-
-      #  - name: Handle Kerberos and LDAP
-      #    include_tasks: ldap.yml
+      state: present
+      update_cache: yes
+      cache_valid_time: 1800
+      name:
+        - manual-notify
 
   - name: Configure bind
     become: True
@@ -56,20 +58,24 @@
 
   - name: Ensure DNSSEC key directories exist
     become: True
-    shell: mkdir -p "/var/cache/bind/dyndb-ldap/{{ bind_dns_ldap_zoneid }}/master/{{ item.zone }}/keys" && chown -R bind:bind /var/cache/bind/dyndb-ldap
+    file:
+      path: "/var/cache/bind/dyndb-ldap/{{ bind_dns_ldap_zoneid }}/master/{{ item.zone }}/keys"
+      owner: bind
+      group: bind
+      mode: 0750
+      state: directory
     with_items: "{{ bind_dnssec_keys }}"
-    changed_when: False
-    failed_when: False
 
   - name: Upload DNSSEC Keys
     become: True
     copy:
-      src: keys/enc/{{ item.name }}
+      src: "keys/enc/{{ item.name }}"
       dest: "/var/cache/bind/dyndb-ldap/{{ bind_dns_ldap_zoneid }}/master/{{ item.zone }}/keys/{{ item.name }}"
       owner: bind
       group: bind
       mode: 0640
     with_items: "{{ bind_dnssec_keys }}"
+    notify: restart bind
 
   - name: Create zones
     run_once: true
@@ -84,6 +90,7 @@
         - idnsRecord
       attributes: "{{ item.attributes }}"
     with_items: "{{ bind_dns_zones }}"
+    notify: restart bind
 
   - name: Create static entries
     run_once: true
