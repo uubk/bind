@@ -116,7 +116,7 @@
       group: root
       mode: 0755
 
-  - name: Configre manual notify service
+  - name: Configure manual notify service
     when: bind_notify_manual
     become: True
     copy:
@@ -126,5 +126,23 @@
       mode: 0640
       content: "{{ bind_notify_manual_config|to_nice_yaml }}"
     notify: restart manual-notify
+
+  - name: Enable local AppArmor overrides for named profile
+    become: True
+    lineinfile:
+      path: /etc/apparmor.d/usr.sbin.named
+      regexp: '^.*include <local/usr.sbin.named>$'
+      line: '  include <local/usr.sbin.named>'
+    notify: reload aa-profile
+
+  - name: Add AppArmor profile override so that named can read the ldap config
+    become: True
+    template:
+      src: aa.j2
+      dest: /etc/apparmor.d/local/usr.sbin.named
+      owner: root
+      group: root
+      mode: 0644
+    notify: reload aa-profile
 
   - meta: flush_handlers

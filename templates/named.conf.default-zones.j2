@@ -35,15 +35,15 @@ view "external" {
 	match-clients { any; };
 	recursion no;
 
-	dynamic-db "{{ bind_dns_ldap_zoneid }}" {
-		library "ldap.so";
-		arg "uri {{ bind_ldap_url }}";
-		arg "base {{ bind_ldap_base }}";
-		arg "auth_method sasl";
-		arg "krb5_principal DNS/{{ ansible_fqdn }}@{{ bind_ldap_krb_realm }}";
-		arg "sasl_mech GSSAPI";
-		arg "krb5_keytab FILE:/etc/bind/ldap.keytab";
-		arg "connections 3";
-		arg "fake_mname {{ ansible_fqdn }}.";
+	dyndb "{{ bind_dns_ldap_zoneid }}" "/usr/lib/bind/ldap.so" {
+		server_id "{{ ansible_fqdn }}";
+		uri "{{ bind_ldap_url }}";
+		base "{{ bind_ldap_base }}";
+		auth_method "sasl";
+		krb5_principal "DNS/{{ ansible_fqdn }}@{{ bind_ldap_krb_realm }}";
+		sasl_mech "GSSAPI";
+		krb5_keytab "FILE:/etc/bind/krb5.keytab";
+		connections 3;
+		fake_mname "{{ ansible_fqdn }}.";
 	};
 };
