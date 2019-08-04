@@ -9,4 +9,4 @@
 
   - name: reload aa-profile
     become: True
-    command: apparmor_parser -r /etc/apparmor.d/usr.sbin.named
+    command: /sbin/apparmor_parser -r /etc/apparmor.d/usr.sbin.named
