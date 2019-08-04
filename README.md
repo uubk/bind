@@ -2,7 +2,7 @@
 [![CircleCI status](https://img.shields.io/circleci/project/github/uubk/bind/master.svg?style=shield)](https://circleci.com/gh/uubk/bind/tree/master)
 ![License](https://img.shields.io/github/license/uubk/bind.svg?style=popout)
 
-Setup Bind9 as authoritative server with zones stored in LDAP. Tested on Debian 9.
+Setup Bind9 as authoritative server with zones stored in LDAP. Tested on Debian 10.
 
 ## Note
 The role assumes that you used e.g. [auth-server](https://github.com/uubk/auth-server) to pre-provision Kerberos principals, keytabs and the LDAP schema.
