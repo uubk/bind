@@ -7,7 +7,7 @@ view "internal" {
 	// prime the server with knowledge of the root servers
 	zone "." {
 		type hint;
-		file "/etc/bind/db.root";
+		file "/usr/share/dns/root.hints";
 	};
 
 	zone "localhost" {
