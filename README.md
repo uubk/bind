@@ -21,6 +21,7 @@ This role sets up Bind 9 as DNSSEC-validation resolver for loopback queries and 
 | `bind_dns_zones` | `[]` | Array of DNS zones (see below) |
 | `bind_dns_entries` | `[]` | Array of records in DNS zones (see below) |
 | `bind_dnssec_keys` | `[]` | Array of DNSSEC keys for DNS zones (see below) |
+| `bind_rfc2136_keys` | `[]` | Array of RFC2136 keys for updates (see below) |
 
 An example configuration might look like this:
 ```
@@ -62,6 +63,11 @@ bind_dnssec_keys:
     zone: example.org
   - name: Kexample.org.+010+04300.private
     zone: example.org
+
+bind_rfc2136_keys:
+  - name: foo.example.org
+    value: "supersecretvalue for hmac"
+    algo: hmac-sha512
 ```
 This would publish `example.org` with (www.)example.org pointing to 127.0.0.1. The DNSSEC keys can be generated using for example (algorithm 10):
 ```

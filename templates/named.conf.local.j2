@@ -8,3 +8,10 @@
 acl internal {
     127.0.0.0/8;
 };
+
+{% for item in bind_rfc2136_keys %}
+key "{{ item.name }}" {
+    algorithm {{ item.algo }};
+    secret "{{ item.value }}";
+};
+{% endfor %}
