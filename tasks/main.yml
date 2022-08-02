@@ -76,6 +76,7 @@
       group: bind
       mode: 0640
     with_items: "{{ bind_dnssec_keys }}"
+    no_log: True
     notify: restart bind
 
   - name: Create zones
