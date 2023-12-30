@@ -1,3 +1,7 @@
+_This role is archived_
+
+The dyndb-ldap package has been dropped from Debian stable, so this role is no longer used.
+
 # Bind
 [![CircleCI status](https://img.shields.io/circleci/project/github/uubk/bind/master.svg?style=shield)](https://circleci.com/gh/uubk/bind/tree/master)
 ![License](https://img.shields.io/github/license/uubk/bind.svg?style=popout)
